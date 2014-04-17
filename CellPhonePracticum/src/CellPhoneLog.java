@@ -1,13 +1,15 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
 
 
 public class CellPhoneLog extends JFrame 
@@ -48,12 +50,18 @@ public class CellPhoneLog extends JFrame
 		
 		
 		JButton btnLogList = new JButton("Log List");
+		ActionListener listener = new ClickLogList();
+		btnLogList.addActionListener(listener);
 		phonePanel.add(btnLogList);
 		
 		JButton btnCheckIn = new JButton("Check In");
+		ActionListener listener2 = new ClickCheckIn();
+		btnCheckIn.addActionListener(listener2);
 		phonePanel.add(btnCheckIn);
 		
 		JButton btnMarkSold = new JButton("Mark Sold");
+		//ActionListener listener3 = new ClickMarkSold();
+		//btnMarkSold.addActionListener(listener3);
 		phonePanel.add(btnMarkSold);
 		
 		return phonePanel;
@@ -86,6 +94,29 @@ public class CellPhoneLog extends JFrame
 		
 		JMenu mnMenu = new JMenu("Menu");
 		menuBar.add(mnMenu);
+	}
+	
+	
+	class ClickLogList implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			//mainProgram.setVisible(false);
+		}
+	}
+	
+	class ClickCheckIn implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			CheckIn checkInScreen = new CheckIn();            
+			checkInScreen.setTitle("Check in Phone");
+			
+			//Sets its size and display to true
+			checkInScreen.setSize(600, 400);
+			checkInScreen.setLocationByPlatform(true);
+			checkInScreen.setVisible(true);
+		}
 	}
 
 }
