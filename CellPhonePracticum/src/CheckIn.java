@@ -3,15 +3,22 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
@@ -19,12 +26,18 @@ import javax.swing.border.TitledBorder;
 public class CheckIn extends JFrame 
 {
 	private JRadioButton rdbtnAtt, rdbtnUsCellular, rdbtnVerizon;
-	private JTextField txtEnter;
 	private JTextField IMEI;
-	private JTextField txtReenter;
 	private JTextField IMEIcheck;
 	private JComboBox comboBoxMonth, comboBoxDay, comboBoxYear;
 	private JTextField txtError;
+	private JLabel lblEnter;
+	private JLabel lblReenter;
+	private JTextField initialField;
+	private JLabel lblInitial;
+	private JLabel label;
+	
+	private File file;
+	private String DataForFile;
 	
 	public CheckIn() 
 	{
@@ -87,7 +100,18 @@ public class CheckIn extends JFrame
 	public JPanel createDatePanel()
 	{
 		JPanel datePanel = new JPanel();
-		datePanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Date", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		datePanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Initial/Date", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		
+		lblInitial = new JLabel("Initial:");
+		lblInitial.setHorizontalAlignment(SwingConstants.LEFT);
+		datePanel.add(lblInitial);
+		
+		initialField = new JTextField();
+		datePanel.add(initialField);
+		initialField.setColumns(6);
+		
+		label = new JLabel("          "); //Space filler
+		datePanel.add(label);
 		
 		comboBoxMonth = new JComboBox();
 		comboBoxMonth.setModel(new DefaultComboBoxModel(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"}));
@@ -112,21 +136,15 @@ public class CheckIn extends JFrame
 		JPanel IMEIpanel = new JPanel();
 		IMEIpanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "IMEI/MEID Numbers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
-		txtEnter = new JTextField();
-		txtEnter.setEditable(false);
-		txtEnter.setText("Enter:");
-		IMEIpanel.add(txtEnter);
-		txtEnter.setColumns(5);
+		lblEnter = new JLabel("Enter:");
+		IMEIpanel.add(lblEnter);
 		
 		IMEI = new JTextField();
 		IMEIpanel.add(IMEI);
 		IMEI.setColumns(15);
 		
-		txtReenter = new JTextField();
-		txtReenter.setEditable(false);
-		txtReenter.setText("Re-enter:");
-		IMEIpanel.add(txtReenter);
-		txtReenter.setColumns(6);
+		lblReenter = new JLabel("Re-enter:");
+		IMEIpanel.add(lblReenter);
 		
 		IMEIcheck = new JTextField();
 		IMEIpanel.add(IMEIcheck);
@@ -176,18 +194,21 @@ public class CheckIn extends JFrame
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			if ( !rdbtnAtt.isSelected() && !rdbtnUsCellular.isSelected() && !rdbtnVerizon.isSelected() )
+			if ( !rdbtnAtt.isSelected() && !rdbtnUsCellular.isSelected() && !rdbtnVerizon.isSelected() ) //Check for carrier
 				txtError.setText("ERROR: Select a carrier.");
 			
-			else if ( (IMEI.getText().equals(IMEIcheck.getText())) && !(IMEI.getText().length()==0) )
+			else if ( initialField.getText().length()==0 )      //Check for initials
+				txtError.setText("ERROR: Enter your initials.");
+			
+			else if ( (IMEI.getText().equals(IMEIcheck.getText())) && !(IMEI.getText().length()==0) ) //Check if IMEI/MEID entered are equal
 			{
-				System.out.println(comboBoxDay.getSelectedItem().toString()); //Test print out, will write to file later
+				WriteToFile();
 				dispose();
 			}
-			else if (IMEI.getText().length()==0 && IMEIcheck.getText().length()==0)
-				 txtError.setText("ERROR: Please enter in IMEI/MEID numbers.");
+			else if (IMEI.getText().length()==0 && IMEIcheck.getText().length()==0) //Check if IMEI/MEID entered
+				 txtError.setText("ERROR: Enter in IMEI/MEID numbers.");
 			else
-			txtError.setText("ERROR: IMEI/MEID numbers do no match.");
+			txtError.setText("ERROR: IMEI/MEID numbers do no match."); //Check if IMEI/MEID numbers match
 		}
 	}
 	
@@ -197,5 +218,83 @@ public class CheckIn extends JFrame
 		{
 			dispose();
 		}
+	}
+	
+	/*
+	 * Used to write data to file.
+	 */
+	public void WriteToFile()
+	{
+		FileWriter fw = null;
+		BufferedWriter bw = null;
+		PrintWriter out = null;
+		
+		try 
+		{						
+			GatherData();
+			
+			fw = new FileWriter(file, true);
+			bw = new BufferedWriter(fw);
+			out = new PrintWriter(bw);
+			out.println(DataForFile);
+
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally   //Closes files
+		{
+			try
+			{
+				if (out != null)
+					out.close();
+				else if (bw != null)
+					bw.close();
+				else if (fw != null)
+					fw.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/*
+	 * Creates string full of data that was entered.
+	 */
+	public void GatherData()
+	{
+		StringBuilder SB = new StringBuilder();
+		DataForFile = null;
+		
+		//Looks for which carrier was selected.
+		if (rdbtnAtt.isSelected())
+		{
+			file = new File ("C:/PhoneInfo/ATT.txt");
+			SB.append("AT&T|");
+		}
+		
+		else if (rdbtnUsCellular.isSelected())
+		{
+			file = new File ("C:/PhoneInfo/USC.txt");
+			SB.append("USCellular|");
+		}
+		
+		else if (rdbtnVerizon.isSelected())
+		{
+			file = new File ("C:/PhoneInfo/Verizon.txt");
+			SB.append("Verizon|");
+		}
+
+		//Gets all info into StringBuilder 
+		SB.append(initialField.getText().toUpperCase() + "|");
+		SB.append((String)comboBoxMonth.getSelectedItem() + "," + 
+				  (String)comboBoxDay.getSelectedItem() + " " + 
+				  (String)comboBoxYear.getSelectedItem() + "|");
+		SB.append(IMEI.getText());
+		
+		DataForFile = SB.toString(); //Puts all info into DataForFile string to write to file.
 	}
 }
