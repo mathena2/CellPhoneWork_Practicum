@@ -10,13 +10,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.Color;
 
 
-public class CellPhoneLog extends JFrame 
+public class MainScreen extends JFrame 
 {
 	private static final long serialVersionUID = 1L;
 
-	public CellPhoneLog() 
+	public MainScreen() 
 	{
 		createMenu();
 		createControlPanel();	
@@ -110,12 +111,6 @@ public class CellPhoneLog extends JFrame
 		public void actionPerformed(ActionEvent event)
 		{
 			CheckIn checkInScreen = new CheckIn();            
-			checkInScreen.setTitle("Check in Phone");
-			
-			//Sets its size and display to true
-			checkInScreen.setSize(600, 400);
-			checkInScreen.setLocationByPlatform(true);
-			checkInScreen.setVisible(true);
 		}
 	}
 
