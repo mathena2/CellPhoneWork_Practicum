@@ -30,12 +30,15 @@ public class MainScreen extends JFrame
 	{
 		JPanel phoneOptions = createPhoneOptions();
 		JPanel toolOptions = createToolOptions();  
+		JPanel morningOptions = createMorningTasks();
 		
 		JPanel controlPanel = new JPanel();
-		controlPanel.setLayout(new GridLayout(2, 1)); //First number is for amount of JPanels in control panel
+		controlPanel.setLayout(new GridLayout(3, 1)); //First number is for amount of JPanels in control panel
 		
 		controlPanel.add(phoneOptions);
+		controlPanel.add(morningOptions);
 		controlPanel.add(toolOptions); 
+		
 		
 		getContentPane().add(controlPanel, BorderLayout.SOUTH);
 	
@@ -49,15 +52,12 @@ public class MainScreen extends JFrame
 		JPanel phonePanel = new JPanel();
 		phonePanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Phone Options", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		
-		JButton btnLogList = new JButton("Log List");
-		ActionListener listener = new ClickLogList();
-		btnLogList.addActionListener(listener);
-		phonePanel.add(btnLogList);
-		
 		JButton btnCheckIn = new JButton("Check In");
 		ActionListener listener2 = new ClickCheckIn();
 		btnCheckIn.addActionListener(listener2);
+		
+		JButton btnPhoneList = new JButton("Phone List");
+		phonePanel.add(btnPhoneList);
 		phonePanel.add(btnCheckIn);
 		
 		JButton btnMarkSold = new JButton("Mark Sold");
@@ -66,6 +66,23 @@ public class MainScreen extends JFrame
 		phonePanel.add(btnMarkSold);
 		
 		return phonePanel;
+	}
+	
+	/*
+	 * Creates panel of morning tasks to be completed.
+	 */
+	public JPanel createMorningTasks()
+	{
+		JPanel morningPanel = new JPanel();
+		morningPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Morning Tasks", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		JButton button = new JButton("Log List");
+		morningPanel.add(button);
+		
+		JButton btnSoldPhones = new JButton("Sold Phones");
+		morningPanel.add(btnSoldPhones);
+		
+		return morningPanel;
 	}
 	
 	/*
@@ -95,15 +112,6 @@ public class MainScreen extends JFrame
 		
 		JMenu mnMenu = new JMenu("Menu");
 		menuBar.add(mnMenu);
-	}
-	
-	
-	class ClickLogList implements ActionListener
-	{
-		public void actionPerformed(ActionEvent event)
-		{
-			//mainProgram.setVisible(false);
-		}
 	}
 	
 	class ClickCheckIn implements ActionListener

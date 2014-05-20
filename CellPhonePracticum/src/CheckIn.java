@@ -39,6 +39,9 @@ public class CheckIn extends JFrame
 	
 	private File file;
 	private String DataForFile;
+	private JPanel modelPanel;
+	private JLabel lblEnterModel;
+	private JTextField phoneModel;
 	
 	public CheckIn() 
 	{
@@ -54,15 +57,18 @@ public class CheckIn extends JFrame
 		JPanel carrierOptions = createCarrierOptions(); 
 		JPanel datePanel = createDatePanel();
 		JPanel IMEIpanel = createIMEIpanel();
+		JPanel modelPanel = createModelPanel();
 		JPanel finishPanel = finishOrCancel();
 		JPanel errorPanel = showError();
 		
 		JPanel controlPanel = new JPanel();
-		controlPanel.setLayout(new GridLayout(5, 1)); //First number is for amount of JPanels in control panel
+		controlPanel.setLayout(new GridLayout(6, 1)); //First number is for amount of JPanels in control panel
 		
 		controlPanel.add(carrierOptions);
 		controlPanel.add(datePanel);
 		controlPanel.add(IMEIpanel);
+		
+		controlPanel.add(modelPanel);
 		controlPanel.add(errorPanel);
 		controlPanel.add(finishPanel);
 		
@@ -132,6 +138,24 @@ public class CheckIn extends JFrame
 		datePanel.add(comboBoxYear);
 
 		return datePanel;
+	}
+	
+	/*
+	 * Creates panel to enter phone model.
+	 */
+	public JPanel createModelPanel()
+	{
+		JPanel modelPanel = new JPanel();
+		modelPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Model", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		lblEnterModel = new JLabel("Enter:");
+		modelPanel.add(lblEnterModel);
+		
+		phoneModel = new JTextField();
+		modelPanel.add(phoneModel);
+		phoneModel.setColumns(20);
+		
+		return modelPanel;
 	}
 	
 	/*
@@ -205,6 +229,9 @@ public class CheckIn extends JFrame
 			
 			else if ( initialField.getText().length()==0 )      //Check for initials
 				txtError.setText("ERROR: Enter your initials.");
+			
+			else if ( phoneModel.getText().length()==0 )  //Check for model
+				txtError.setText("ERROR: Enter phone model.");
 			
 			else if ( (IMEI.getText().equals(IMEIcheck.getText())) && !(IMEI.getText().length()==0) ) //Check if IMEI/MEID entered are equal
 			{
@@ -299,7 +326,8 @@ public class CheckIn extends JFrame
 		SB.append((String)comboBoxMonth.getSelectedItem() + "," + 
 				  (String)comboBoxDay.getSelectedItem() + " " + 
 				  (String)comboBoxYear.getSelectedItem() + "|");
-		SB.append(IMEI.getText());
+		SB.append(phoneModel.getText().toUpperCase() + "|");
+		SB.append(IMEI.getText() + "|");
 		
 		DataForFile = SB.toString(); //Puts all info into DataForFile string to write to file.
 	}
