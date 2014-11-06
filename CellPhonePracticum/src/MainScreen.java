@@ -8,14 +8,16 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import java.awt.Color;
 
 
 public class MainScreen extends JFrame 
 {
 	private static final long serialVersionUID = 1L;
+	JTextArea textArea;
 
 	public MainScreen() 
 	{
@@ -41,6 +43,11 @@ public class MainScreen extends JFrame
 		
 		
 		getContentPane().add(controlPanel, BorderLayout.SOUTH);
+		
+		textArea = new JTextArea("");
+		textArea.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
 	
 	}
 	
@@ -57,6 +64,10 @@ public class MainScreen extends JFrame
 		btnCheckIn.addActionListener(listener2);
 		
 		JButton btnPhoneList = new JButton("Phone List");
+		ActionListener listener3 = new ClickPhoneList();
+		btnPhoneList.addActionListener(listener3);
+		
+		
 		phonePanel.add(btnPhoneList);
 		phonePanel.add(btnCheckIn);
 		
@@ -119,6 +130,15 @@ public class MainScreen extends JFrame
 		public void actionPerformed(ActionEvent event)
 		{
 			CheckIn checkInScreen = new CheckIn();            
+		}
+	}
+	
+	class ClickPhoneList implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			//PhoneList phoneListScreen = new PhoneList();
+			//textArea.append("Test \n\n");
 		}
 	}
 
