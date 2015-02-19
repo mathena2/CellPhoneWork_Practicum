@@ -13,11 +13,21 @@ import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import java.sql.*;
+
 
 public class MainScreen extends JFrame 
 {
 	private static final long serialVersionUID = 1L;
 	JTextArea textArea;
+	
+	//JDBC driver name and database URL
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static final String DB_URL = "jdbc:mysql://localhost:3306/cellphonelog";
+			
+	//Database credentials
+	static final String USER = "root";
+	static final String PASS = "";
 
 	public MainScreen() 
 	{
@@ -87,8 +97,10 @@ public class MainScreen extends JFrame
 		JPanel morningPanel = new JPanel();
 		morningPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Morning Tasks", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JButton button = new JButton("Log List");
-		morningPanel.add(button);
+		JButton btnLogList = new JButton("Log List");
+		ActionListener listener2 = new ClickLogList();
+		btnLogList.addActionListener(listener2);
+		morningPanel.add(btnLogList);
 		
 		JButton btnSoldPhones = new JButton("Sold Phones");
 		morningPanel.add(btnSoldPhones);
@@ -154,7 +166,8 @@ public class MainScreen extends JFrame
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			textArea.append("Test \n\n");
+			//textArea.append("Test \n\n");
+			GetLogList();
 		}
 	}
 	
@@ -184,7 +197,63 @@ public class MainScreen extends JFrame
 	
 	public void GetLogList()
 	{
+		Connection conn = null;
+		Statement stmt = null;
 		
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			//Connect to DB
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			
+			stmt = conn.createStatement();
+			
+			String SQL = "SELECT IMEI, Initials, LogDate, Model, Carrier FROM cell_phones " +
+						 "WHERE Sold = '0' " +
+						 "ORDER BY Carrier ASC, Model ASC";
+			
+			ResultSet rs = stmt.executeQuery(SQL);
+			
+			while(rs.next())
+			{
+				String IMEI     = rs.getString("IMEI"); 
+				String initials = rs.getString("Initials");
+				String logDate  = rs.getString("LogDate");
+				String model    = rs.getString("Model");
+				String carrier  = rs.getString("Carrier");
+				
+				textArea.append("IMEI/MEID: " + IMEI);
+				textArea.append(" Initials: " + initials);
+				textArea.append(" Log Date: " + logDate);
+				textArea.append(" Model: " + model);
+				textArea.append(" Carrier: " + carrier + "\n");
+			}
+			rs.close();
+			
+		}catch(SQLException se){
+			//handle errors for JDBC
+			se.printStackTrace();
+		}catch(Exception e){
+			//handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try
+			{
+				if(stmt != null)
+					conn.close();
+			}catch(SQLException se){
+				//Do nothing
+			}
+			try
+			{
+				if (conn != null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}//end try
 	}
 
 }
