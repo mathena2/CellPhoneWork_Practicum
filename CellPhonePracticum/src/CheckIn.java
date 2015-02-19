@@ -1,8 +1,13 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -73,13 +78,15 @@ public class CheckIn extends JFrame
 		controlPanel.add(errorPanel);
 		controlPanel.add(finishPanel);
 		
+		//getContentPane().add(controlPanel, BorderLayout.NORTH);
+		
 		//Sets its size and display to true
 		JDialog dialog = new JDialog(this, true);
 		dialog.setTitle("Check in Phone");
 		dialog.setLocationByPlatform(true);
 		dialog.add(controlPanel);
 		dialog.setSize(600, 400);                    
-		dialog.setVisible(true);
+		dialog.setVisible(true); 
 	}
 	
 	/*
@@ -135,7 +142,7 @@ public class CheckIn extends JFrame
 		datePanel.add(comboBoxDay);
 		
 		comboBoxYear = new JComboBox();
-		comboBoxYear.setModel(new DefaultComboBoxModel(new String[] {"2014", "2015", "2016", "2017", "2018"}));
+		comboBoxYear.setModel(new DefaultComboBoxModel(new String[] {"2015", "2016", "2017", "2018"}));
 		datePanel.add(comboBoxYear);
 
 		return datePanel;

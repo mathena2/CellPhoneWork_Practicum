@@ -72,8 +72,8 @@ public class MainScreen extends JFrame
 		phonePanel.add(btnCheckIn);
 		
 		JButton btnMarkSold = new JButton("Mark Sold");
-		//ActionListener listener3 = new ClickMarkSold();
-		//btnMarkSold.addActionListener(listener3);
+		ActionListener listener4 = new ClickMarkSold();
+		btnMarkSold.addActionListener(listener4);
 		phonePanel.add(btnMarkSold);
 		
 		return phonePanel;
@@ -138,8 +138,53 @@ public class MainScreen extends JFrame
 		public void actionPerformed(ActionEvent event)
 		{
 			//PhoneList phoneListScreen = new PhoneList();
-			//textArea.append("Test \n\n");
+			textArea.append("Test \n\n");
 		}
+	}
+	
+	class ClickMarkSold implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			MarkSold markSoldScreen = new MarkSold();
+		}
+	}
+	
+	class ClickLogList implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			textArea.append("Test \n\n");
+		}
+	}
+	
+	class ClickSoldPhones implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			textArea.append("Test \n\n");
+		}
+	}
+	
+	class ClickRepList implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			textArea.append("Test \n\n");
+		}
+	}
+	
+	class ClickPrintOuts implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			textArea.append("Test \n\n");
+		}
+	}
+	
+	public void GetLogList()
+	{
+		
 	}
 
 }
