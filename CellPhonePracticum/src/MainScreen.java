@@ -149,8 +149,7 @@ public class MainScreen extends JFrame
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			//PhoneList phoneListScreen = new PhoneList();
-			textArea.append("Test \n\n");
+			PhoneList phoneListScreen = new PhoneList();
 		}
 	}
 	
@@ -166,7 +165,6 @@ public class MainScreen extends JFrame
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			//textArea.append("Test \n\n");
 			GetLogList();
 		}
 	}
